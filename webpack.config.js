@@ -1,19 +1,35 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const glob = require('glob');
 const isProd = process.env.NODE_ENV === 'production';
 
+const BASEPATH = path.resolve(__dirname, 'src');
+const PROJECTS = ['hoge', 'fuga'];
+
+const OUTPUTPOINTS = {};
+PROJECTS.forEach(project => {
+  OUTPUTPOINTS[project] = `${project}/src/main/webapp`;
+});
+
+const entries = {};
+glob.sync(`${BASEPATH}/+(${PROJECTS.join('|')})/js/**/*.js`).forEach(target => {
+  const regExp = new RegExp(`${BASEPATH}/`);
+  const directories = target.replace(regExp, '').split('/');
+  const targetProject = directories.shift();
+  const file = directories.join('/');
+  const name = `${OUTPUTPOINTS[targetProject]}/${file}`;
+  entries[name] = target;
+});
+
 module.exports = {
-  entry: {
-    app: './src/js/index.js',
-    job: './src/js/job/index.js'
-  },
+  entry: entries,
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'js/[name].bundle.js'
+    path: path.resolve(__dirname, ''),
+    filename: '[name]'
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: 'css/[name].css',
+      filename: '[name].css',
     })
   ],
   module: {
@@ -40,5 +56,5 @@ module.exports = {
       }
     ]
   },
-  devtool: isProd ? '' : 'source-map'
+  devtool: isProd ? '' : 'inline-source-map'
 }
