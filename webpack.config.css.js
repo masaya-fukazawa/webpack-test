@@ -1,6 +1,7 @@
 const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const glob = require('glob');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const ExcludeJsPlugin = require('./webpack.plugins');
 const { getAssetPath, BASEPATH, PRODUCTS } = require('./webpack.utils');
 
 const entries = {};
@@ -12,13 +13,13 @@ glob.sync(`${BASEPATH}/+(${PRODUCTS.join('|')})/css/**/*.+(sc|sa|c)ss`).forEach(
 module.exports = {
   entry: entries,
   output: {
-    path: path.resolve(__dirname, ''),
-    filename: '[name.css]'
+    path: path.resolve(__dirname, '')
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: '[name].css',
-    })
+      filename: '[name].css'
+    }),
+    new ExcludeJsPlugin()
   ],
   module: {
     rules: [

@@ -8,6 +8,8 @@
     "build:prod": "NODE_ENV=production yarn build --mode=production",
     "build:dev": "yarn build --mode=development",
     "watch": "yarn build:dev --watch",
+    "build:css": "webpack --config webpack.config.css.js",
+    "watch:css": "yarn build:css --watch",
     "clear": "rm -rf dist"
   },
   "devDependencies": {

@@ -1,4 +1,3 @@
 node_modules
 dist
-hoge
-fuga
+hoge/src/main/webapp
